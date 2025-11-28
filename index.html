@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Peak District Hikes Map</title>
+  <title>Eryri Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -10,7 +10,6 @@
     html, body { margin:0; height:100% }
     #map { position:absolute; inset:0 }
 
-    /* Hide Mapbox logo and attribution (you'll do attribution elsewhere) */
     .mapboxgl-ctrl-logo,
     .mapboxgl-ctrl-attrib,
     .mapboxgl-ctrl-attrib-inner { display:none !important; visibility:hidden !important; }
@@ -64,7 +63,6 @@
 
     .hike-gap{ margin-top:2px }
 
-    /* Slightly smaller fullscreen icon (only affects the fullscreen button) */
     .mapboxgl-ctrl-fullscreen .mapboxgl-ctrl-icon {
       transform: scale(0.88);
       transform-origin: center;
@@ -86,26 +84,26 @@ mapboxgl.accessToken="pk.eyJ1IjoicmVtbWlhZ2JlYmkiLCJhIjoiY21odHRrYTQzMTk0bjJqcjE
 
 const RED="#EC2629", BLUE="#3899EC";
 const IMG={
-  derwent:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/images/derwent-dam-tower.jpg",
-  crashed:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/images/b29-overexposed-crash-site.jpg",
-  kinder:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/images/kinder-scout-carved-rock.png"
+  derwent:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/derwent-dam-tower.jpg",
+  crashed:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/b29-overexposed-crash-site.jpg",
+  kinder:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/kinder-scout-carved-rock.png"
 };
 
 const hikes=[
   { id:"derwent-edge", name:"Derwent Edge", coords:[-1.7427849606990842,53.400582126300236],
     hikeUrl:"https://thelostpeak.co.uk/hikes/derwent-edge",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.400582126300236,-1.7427849606990842",
-    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/refs/heads/main/gpx/Derwent%20Edge.gpx",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Derwent%20Edge.gpx",
     photo:IMG.derwent, specs:{ duration:"3 to 4 hours", length:"7.4 miles", ascent:"367m" } },
   { id:"crashed-plane", name:"Crashed Plane Hike", coords:[-1.8689,53.4329],
     hikeUrl:"https://thelostpeak.co.uk/hikes/crashed-plane",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.4329,-1.8689",
-    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/refs/heads/main/gpx/The%20Crashed%20Plane%20Hike.gpx",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/The%20Crashed%20Plane%20Hike.gpx",
     photo:IMG.crashed, specs:{ duration:"2 to 3 hours", length:"3.6 miles", ascent:"145m" } },
   { id:"kinder-scout", name:"Kinder Scout", coords:[-1.8151209383535991,53.364872107766416],
     hikeUrl:"https://thelostpeak.co.uk/hikes/kinder-scout",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.364872107766416,-1.8151209383535991",
-    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/refs/heads/main/gpx/Kinder%20Scout%20Hike.gpx",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Kinder%20Scout%20Hike.gpx",
     photo:IMG.kinder, specs:{ duration:"4 to 6 hours", length:"8.3 miles", ascent:"562m" } }
 ];
 
@@ -117,18 +115,15 @@ const map=new mapboxgl.Map({
   attributionControl:false
 });
 
-/* Add controls */
 const nav = new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
 map.addControl(nav, "bottom-right");
 const fs  = new mapboxgl.FullscreenControl();
 map.addControl(fs, "bottom-right");
 
-/* Merge the fullscreen button into the same group (after zoom-out, before compass) */
 function mergeFullscreenIntoNavOnce(){
   const corner = map.getContainer().querySelector('.mapboxgl-ctrl-bottom-right');
   if(!corner) return false;
 
-  // The nav group is the one containing zoom-in
   const navGroup = Array.from(corner.querySelectorAll('.mapboxgl-ctrl-group'))
     .find(g => g.querySelector('.mapboxgl-ctrl-zoom-in'));
   const fsBtn = corner.querySelector('button.mapboxgl-ctrl-fullscreen');
@@ -149,7 +144,6 @@ function mergeFullscreenIntoNavOnce(){
 }
 
 map.on('load', () => {
-  // Try a few times until the controls are in the DOM, then stop
   let tries = 0;
   (function tryMerge(){
     if (mergeFullscreenIntoNavOnce() || (++tries > 20)) return;
@@ -157,7 +151,6 @@ map.on('load', () => {
   })();
 });
 
-/* Hover system */
 const markerElsById={}, routeLayerId={}; let hoveredId=null;
 function setMarkerColor(id,c){ const el=markerElsById[id]; if(!el) return; const p=el.querySelector("svg path"); if(p) p.setAttribute("fill",c); }
 function setRouteColor(id,c){ const lyr=routeLayerId[id]; if(lyr && map.getLayer(lyr)) map.setPaintProperty(lyr,"line-color",c); }
@@ -173,8 +166,8 @@ const icons={
   clock:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>`,
   length:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h18M3 16h18"/><path d="M6 8v8M10 8v8M14 8v8M18 8v8"/></svg>`,
   ascent:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18"/><path d="M6 18l5-6 4 4 5-7"/><path d="M20 7h-5v5"/></svg>`,
-  walk:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/icons/walking-person-go-walk-move-svgrepo-com.svg">`,
-  directions:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/icons/marker-svgrepo-com.svg">`
+  walk:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/icons/walking-person-go-walk-move-svgrepo-com.svg">`,
+  directions:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/icons/marker-svgrepo-com.svg">`
 };
 
 function specsHTML(s,u){
