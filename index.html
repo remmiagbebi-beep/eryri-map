@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Peak District Hikes Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin:0; height:100% }
+    #map { position:absolute; inset:0 }
+
+    /* Hide Mapbox logo and attribution (you'll do attribution elsewhere) */
+    .mapboxgl-ctrl-logo,
+    .mapboxgl-ctrl-attrib,
+    .mapboxgl-ctrl-attrib-inner { display:none !important; visibility:hidden !important; }
+
+    .marker{ cursor:pointer !important }
+    .marker svg{ transform:scale(0.85); transform-origin:center }
+
+    .mapboxgl-popup{ filter:drop-shadow(0 14px 28px rgba(0,0,0,.45)) }
+    .mapboxgl-popup-tip{ display:none !important }
+
+    .mapboxgl-popup-content{
+      background:transparent !important;
+      border:none !important;
+      padding:0 !important;
+      box-shadow:none !important;
+      width:auto !important;
+      overflow:visible !important;
+      display:block;
+      box-sizing:border-box;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
+      text-transform:capitalize;
+    }
+
+    .popup-card{
+      display:flex; align-items:stretch; background:#fff; border-radius:12px; overflow:hidden;
+      width:fit-content; height:130px;
+    }
+    .img-wrap{ width:140px; flex:0 0 140px; height:100%; border-radius:12px 0 0 12px; overflow:hidden; background:#000 }
+    .img-wrap img{ width:100%; height:100%; object-fit:cover; display:block }
+
+    .popup-body{
+      box-sizing:border-box; padding:8px 12px 10px 10px;
+      flex:0 0 140px; min-width:140px; max-width:140px;
+      text-align:center; display:flex; flex-direction:column; justify-content:center; line-height:1.2;
+      transform: translateY(-1px);
+    }
+    .popup-heading{ font-weight:800; font-size:11px; margin:2px 0 6px 0; color:#1E1E1E }
+
+    .specs{ font-size:10px; display:flex; flex-direction:column; gap:3px; align-items:center; transform: translateY(1px); margin-top:2px }
+    .stats-group{ transform:translateY(-2px); display:flex; flex-direction:column; gap:3px; align-items:center }
+    .links-group{ display:flex; flex-direction:column; gap:3px; align-items:center }
+
+    .spec-row{ display:flex; align-items:center; justify-content:center; gap:4px }
+    .icon{ width:16px; height:16px }
+    .icon-red{ color:#EC2629 } .icon-blue{ color:#3899EC }
+    .icon-img{ width:12px; height:12px; display:block; filter: invert(41%) sepia(97%) saturate(1476%) hue-rotate(191deg) brightness(96%) contrast(101%) }
+
+    .spec-value{ font-weight:800; color:#EC2629; font-size:11px }
+    .popup-link{ color:#3899EC; font-weight:800; font-size:11px; text-decoration:none; outline:none !important; border:none !important; box-shadow:none !important }
+    .popup-link:focus, .popup-link:focus-visible, .popup-link:active{ outline:none !important; border:none !important; box-shadow:none !important }
+
+    .hike-gap{ margin-top:2px }
+
+    /* Slightly smaller fullscreen icon (only affects the fullscreen button) */
+    .mapboxgl-ctrl-fullscreen .mapboxgl-ctrl-icon {
+      transform: scale(0.88);
+      transform-origin: center;
+    }
+
+    @media (max-width:440px){
+      .img-wrap{ width:120px; flex-basis:120px }
+      .popup-card{ min-width:290px; max-width:320px; height:190px }
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+<script src="https://unpkg.com/@tmcw/togeojson@5.8.0/dist/togeojson.umd.js"></script>
+<script>
+mapboxgl.accessToken="pk.eyJ1IjoicmVtbWlhZ2JlYmkiLCJhIjoiY21odHRrYTQzMTk0bjJqcjE1b2xhZ2FraSJ9.nTCz33gX0gQt3T4A6VD0oQ";
+
+const RED="#EC2629", BLUE="#3899EC";
+const IMG={
+  derwent:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/images/derwent-dam-tower.jpg",
+  crashed:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/images/b29-overexposed-crash-site.jpg",
+  kinder:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/images/kinder-scout-carved-rock.png"
+};
+
+const hikes=[
+  { id:"derwent-edge", name:"Derwent Edge", coords:[-1.7427849606990842,53.400582126300236],
+    hikeUrl:"https://thelostpeak.co.uk/hikes/derwent-edge",
+    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.400582126300236,-1.7427849606990842",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/refs/heads/main/gpx/Derwent%20Edge.gpx",
+    photo:IMG.derwent, specs:{ duration:"3 to 4 hours", length:"7.4 miles", ascent:"367m" } },
+  { id:"crashed-plane", name:"Crashed Plane Hike", coords:[-1.8689,53.4329],
+    hikeUrl:"https://thelostpeak.co.uk/hikes/crashed-plane",
+    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.4329,-1.8689",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/refs/heads/main/gpx/The%20Crashed%20Plane%20Hike.gpx",
+    photo:IMG.crashed, specs:{ duration:"2 to 3 hours", length:"3.6 miles", ascent:"145m" } },
+  { id:"kinder-scout", name:"Kinder Scout", coords:[-1.8151209383535991,53.364872107766416],
+    hikeUrl:"https://thelostpeak.co.uk/hikes/kinder-scout",
+    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.364872107766416,-1.8151209383535991",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/refs/heads/main/gpx/Kinder%20Scout%20Hike.gpx",
+    photo:IMG.kinder, specs:{ duration:"4 to 6 hours", length:"8.3 miles", ascent:"562m" } }
+];
+
+const map=new mapboxgl.Map({
+  container:"map",
+  style:"mapbox://styles/mapbox/satellite-streets-v12",
+  center:[-1.78,53.41],
+  zoom:11,
+  attributionControl:false
+});
+
+/* Add controls */
+const nav = new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
+map.addControl(nav, "bottom-right");
+const fs  = new mapboxgl.FullscreenControl();
+map.addControl(fs, "bottom-right");
+
+/* Merge the fullscreen button into the same group (after zoom-out, before compass) */
+function mergeFullscreenIntoNavOnce(){
+  const corner = map.getContainer().querySelector('.mapboxgl-ctrl-bottom-right');
+  if(!corner) return false;
+
+  // The nav group is the one containing zoom-in
+  const navGroup = Array.from(corner.querySelectorAll('.mapboxgl-ctrl-group'))
+    .find(g => g.querySelector('.mapboxgl-ctrl-zoom-in'));
+  const fsBtn = corner.querySelector('button.mapboxgl-ctrl-fullscreen');
+  if(!navGroup || !fsBtn) return false;
+
+  const fsGroup = fsBtn.closest('.mapboxgl-ctrl-group');
+  const zoomOut = navGroup.querySelector('.mapboxgl-ctrl-zoom-out');
+  const compass = navGroup.querySelector('.mapboxgl-ctrl-compass');
+
+  if(zoomOut){
+    navGroup.insertBefore(fsBtn, compass ? compass : zoomOut.nextSibling);
+  } else {
+    navGroup.appendChild(fsBtn);
+  }
+
+  if(fsGroup && fsGroup !== navGroup && fsGroup.childElementCount === 0) fsGroup.remove();
+  return true;
+}
+
+map.on('load', () => {
+  // Try a few times until the controls are in the DOM, then stop
+  let tries = 0;
+  (function tryMerge(){
+    if (mergeFullscreenIntoNavOnce() || (++tries > 20)) return;
+    requestAnimationFrame(tryMerge);
+  })();
+});
+
+/* Hover system */
+const markerElsById={}, routeLayerId={}; let hoveredId=null;
+function setMarkerColor(id,c){ const el=markerElsById[id]; if(!el) return; const p=el.querySelector("svg path"); if(p) p.setAttribute("fill",c); }
+function setRouteColor(id,c){ const lyr=routeLayerId[id]; if(lyr && map.getLayer(lyr)) map.setPaintProperty(lyr,"line-color",c); }
+function applyHoverState(){
+  Object.keys(routeLayerId).forEach(id=>setRouteColor(id,RED));
+  Object.keys(markerElsById).forEach(id=>setMarkerColor(id,RED));
+  if(hoveredId){ setRouteColor(hoveredId,BLUE); setMarkerColor(hoveredId,BLUE); map.getCanvas().style.cursor="pointer"; }
+  else { map.getCanvas().style.cursor=""; }
+}
+function setHovered(id){ hoveredId=id; applyHoverState(); }
+
+const icons={
+  clock:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>`,
+  length:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h18M3 16h18"/><path d="M6 8v8M10 8v8M14 8v8M18 8v8"/></svg>`,
+  ascent:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18"/><path d="M6 18l5-6 4 4 5-7"/><path d="M20 7h-5v5"/></svg>`,
+  walk:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/icons/walking-person-go-walk-move-svgrepo-com.svg">`,
+  directions:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/peak-district-map/main/icons/marker-svgrepo-com.svg">`
+};
+
+function specsHTML(s,u){
+  return `
+    <div class="specs">
+      <div class="stats-group">
+        <div class="spec-row">${icons.clock}<span class="spec-value">${s.duration}</span></div>
+        <div class="spec-row">${icons.length}<span class="spec-value">${s.length}</span></div>
+        <div class="spec-row">${icons.ascent}<span class="spec-value">${s.ascent}</span></div>
+      </div>
+      <div class="links-group">
+        <div class="spec-row hike-gap">${icons.walk}<a class="popup-link" href="${u.hikeUrl}" target="_blank">Hike Page</a></div>
+        <div class="spec-row">${icons.directions}<a class="popup-link" href="${u.directionsUrl}" target="_blank">Directions</a></div>
+      </div>
+    </div>`;
+}
+
+function popupHtmlFor(h){
+  return `
+    <div class="popup-card">
+      <div class="img-wrap"><img src="${h.photo}" alt="${h.name}"></div>
+      <div class="popup-body">
+        <div class="popup-heading">${h.name}</div>
+        ${specsHTML(h.specs,{hikeUrl:h.hikeUrl,directionsUrl:h.directionsUrl})}
+      </div>
+    </div>`;
+}
+
+async function loadGpx(url){
+  const res=await fetch(url);
+  const xml=new DOMParser().parseFromString(await res.text(),"text/xml");
+  const gj=toGeoJSON.gpx(xml);
+  return gj.features.find(f=>f.geometry && f.geometry.type==="LineString");
+}
+
+function addRoute(id,line){
+  const src=`route-src-${id}`, lyr=`route-lyr-${id}`;
+  if(!map.getSource(src)) map.addSource(src,{type:"geojson",data:line});
+  if(!map.getLayer(lyr)){
+    map.addLayer({ id:lyr, type:"line", source:src,
+      paint:{ "line-color":RED, "line-width":3, "line-opacity":0.95, "line-color-transition":{ duration:0 } }
+    });
+  }
+  routeLayerId[id]=lyr;
+}
+
+map.on("load", async () => {
+  const bounds=new mapboxgl.LngLatBounds();
+
+  hikes.forEach(h=>{
+    const marker=new mapboxgl.Marker({color:RED})
+      .setLngLat(h.coords)
+      .setPopup(new mapboxgl.Popup({offset:22, closeButton:false}).setHTML(popupHtmlFor(h)))
+      .addTo(map);
+    const el=marker.getElement();
+    el.classList.add("marker");
+    markerElsById[h.id]=el;
+    bounds.extend(h.coords);
+    el.addEventListener("mouseenter",()=>setHovered(h.id));
+    el.addEventListener("mouseleave",()=>setHovered(null));
+  });
+
+  for(const h of hikes){
+    try{
+      const line=await loadGpx(h.gpx);
+      addRoute(h.id,line);
+      line.geometry.coordinates.forEach(c=>bounds.extend(c));
+      map.on("mouseenter",routeLayerId[h.id],()=>setHovered(h.id));
+      map.on("mouseleave",routeLayerId[h.id],()=>setHovered(null));
+    }catch(e){}
+  }
+
+  map.fitBounds(bounds,{ padding:110, maxZoom:11 });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gpx version="1.1" creator="OS Maps - Web" xmlns="http://www.topografix.com/GPX/1/1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd"
+xmlns:gs="http://www.topografix.com/GPX/gpx_style/0/2"
+xmlns:gh="https://graphhopper.com/public/schema/gpx/1.1"
+xmlns:os="https://ordnancesurvey.co.uk/public/schema/route/0.1">
+    <metadata>
+        <name>The Crashed Plane Hike</name>
+        <desc></desc>
+        <bounds minlat="53.4330094" minlon="-1.8692476" maxlat="53.4506655" maxlon="-1.8522187"/>
+        <extensions>
+            <os:version>2.0</os:version>
+            <os:point lat="53.4330094" lon="-1.8689072" type="start"/>
+            <os:point lat="53.4330825" lon="-1.8691460" type="end"/>
+            <os:activity>ON_FOOT_WALKING</os:activity>
+            <os:difficulty>EASY</os:difficulty>
+            <os:paths/>
+            <os:distance>5789.7806653</os:distance>
+            <os:elevation_ascent>144.5400000</os:elevation_ascent>
+        </extensions>
+    </metadata>
+    <wpt lat="53.4330094" lon="-1.8689072"/>
+    <wpt lat="53.4363822" lon="-1.8666571"/>
+    <wpt lat="53.4367017" lon="-1.8666376"/>
+    <wpt lat="53.4379477" lon="-1.8648252"/>
+    <wpt lat="53.4412041" lon="-1.8588384"/>
+    <wpt lat="53.4445629" lon="-1.8535238"/>
+    <wpt lat="53.4474835" lon="-1.8522187"/>
+    <wpt lat="53.4486931" lon="-1.8539420"/>
+    <wpt lat="53.4490882" lon="-1.8533301"/>
+    <wpt lat="53.4503576" lon="-1.8571596"/>
+    <wpt lat="53.4506268" lon="-1.8583442"/>
+    <wpt lat="53.4501779" lon="-1.8623650"/>
+    <wpt lat="53.4503461" lon="-1.8625096"/>
+    <wpt lat="53.4502992" lon="-1.8641471"/>
+    <wpt lat="53.4505335" lon="-1.8643686"/>
+    <wpt lat="53.4504972" lon="-1.8647957"/>
+    <wpt lat="53.4506655" lon="-1.8653574"/>
+    <wpt lat="53.4498757" lon="-1.8675887"/>
+    <wpt lat="53.4488699" lon="-1.8655570"/>
+    <wpt lat="53.4482446" lon="-1.8630508"/>
+    <wpt lat="53.4471222" lon="-1.8612080"/>
+    <wpt lat="53.4453854" lon="-1.8601736"/>
+    <wpt lat="53.4438429" lon="-1.8600331"/>
+    <wpt lat="53.4432108" lon="-1.8605007"/>
+    <wpt lat="53.4413333" lon="-1.8631547"/>
+    <wpt lat="53.4401990" lon="-1.8639876"/>
+    <wpt lat="53.4388227" lon="-1.8654179"/>
+    <wpt lat="53.4381225" lon="-1.8669623"/>
+    <wpt lat="53.4377958" lon="-1.8692476"/>
+    <wpt lat="53.4373083" lon="-1.8678827"/>
+    <wpt lat="53.4368256" lon="-1.8670547"/>
+    <wpt lat="53.4364227" lon="-1.8670072"/>
+    <wpt lat="53.4330825" lon="-1.8691460"/>
+    <rte/>
+    <trk>
+        <trkseg>
+            <trkpt lat="53.4330094" lon="-1.8689072"/>
+            <trkpt lat="53.4363822" lon="-1.8666571"/>
+            <trkpt lat="53.4367017" lon="-1.8666376"/>
+            <trkpt lat="53.4379477" lon="-1.8648252"/>
+            <trkpt lat="53.4412041" lon="-1.8588384"/>
+            <trkpt lat="53.4445629" lon="-1.8535238"/>
+            <trkpt lat="53.4474835" lon="-1.8522187"/>
+            <trkpt lat="53.4486931" lon="-1.8539420"/>
+            <trkpt lat="53.4490882" lon="-1.8533301"/>
+            <trkpt lat="53.4493874" lon="-1.8545221"/>
+            <trkpt lat="53.4496434" lon="-1.8552883"/>
+            <trkpt lat="53.4498006" lon="-1.8555991"/>
+            <trkpt lat="53.4503576" lon="-1.8571596"/>
+            <trkpt lat="53.4506268" lon="-1.8583442"/>
+            <trkpt lat="53.4505555" lon="-1.8594683"/>
+            <trkpt lat="53.4505162" lon="-1.8599639"/>
+            <trkpt lat="53.4502435" lon="-1.8613150"/>
+            <trkpt lat="53.4501779" lon="-1.8623650"/>
+            <trkpt lat="53.4503461" lon="-1.8625096"/>
+            <trkpt lat="53.4502617" lon="-1.8634050"/>
+            <trkpt lat="53.4502992" lon="-1.8641471"/>
+            <trkpt lat="53.4505335" lon="-1.8643686"/>
+            <trkpt lat="53.4504972" lon="-1.8647957"/>
+            <trkpt lat="53.4506655" lon="-1.8653574"/>
+            <trkpt lat="53.4498757" lon="-1.8675887"/>
+            <trkpt lat="53.4488699" lon="-1.8655570"/>
+            <trkpt lat="53.4482446" lon="-1.8630508"/>
+            <trkpt lat="53.4471222" lon="-1.8612080"/>
+            <trkpt lat="53.4461570" lon="-1.8605203"/>
+            <trkpt lat="53.4453854" lon="-1.8601736"/>
+            <trkpt lat="53.4444929" lon="-1.8601329"/>
+            <trkpt lat="53.4438429" lon="-1.8600331"/>
+            <trkpt lat="53.4432108" lon="-1.8605007"/>
+            <trkpt lat="53.4421121" lon="-1.8621047"/>
+            <trkpt lat="53.4413333" lon="-1.8631547"/>
+            <trkpt lat="53.4401990" lon="-1.8639876"/>
+            <trkpt lat="53.4388227" lon="-1.8654179"/>
+            <trkpt lat="53.4381225" lon="-1.8669623"/>
+            <trkpt lat="53.4377958" lon="-1.8692476"/>
+            <trkpt lat="53.4373083" lon="-1.8678827"/>
+            <trkpt lat="53.4368256" lon="-1.8670547"/>
+            <trkpt lat="53.4364227" lon="-1.8670072"/>
+            <trkpt lat="53.4356683" lon="-1.8673838"/>
+            <trkpt lat="53.4352124" lon="-1.8677381"/>
+            <trkpt lat="53.4345017" lon="-1.8681377"/>
+            <trkpt lat="53.4330825" lon="-1.8691460"/>
+            <extensions>
+                <gs:line>
+                    <gs:color>453C90</gs:color>
+                    <gs:opacity>1.0</gs:opacity>
+                    <gs:width>4.0</gs:width>
+                </gs:line>
+            </extensions>
+        </trkseg>
+    </trk>
+</gpx>
